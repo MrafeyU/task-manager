@@ -1,0 +1,11 @@
+        /* src/index.css */
+        @import "tailwindcss";
+
+/* subtle animations */
+@keyframes fadeInScale {
+    from { opacity: 0; transform: translateY(-6px) scale(.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-fade-in {
+    animation: fadeInScale 180ms ease-out both;
+}
