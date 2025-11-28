@@ -31,7 +31,6 @@ export default function Sidebar({ currentPage, setCurrentPage }: SidebarProps) {
       </nav>
 
       <div className="mt-auto">
-        <button className="text-red-500 hover:text-red-600">Logout</button>
       </div>
     </div>
   );

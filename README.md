@@ -5,6 +5,7 @@ A full-stack task management application built with **Node.js + Express** backen
 ## 🎯 Features
 
 ### Core Features
+
 - ✅ **User Authentication**: Register & Login with JWT tokens
 - ✅ **Task CRUD**: Create, Read, Update, Delete tasks
 - ✅ **Task Status Tracking**: Pending, In Progress, Completed
@@ -14,6 +15,7 @@ A full-stack task management application built with **Node.js + Express** backen
 - ✅ **Subtle Animations**: Smooth transitions and hover effects
 
 ### Advanced Features
+
 - 🔐 **JWT Authentication**: Secure token-based user sessions
 - 📅 **Due Dates**: Set task deadlines with date/time
 - 🎨 **Modern UI**: Tailwind CSS with fade-in animations
@@ -23,6 +25,7 @@ A full-stack task management application built with **Node.js + Express** backen
 ## 🛠 Tech Stack
 
 ### Backend
+
 - **Runtime**: Node.js v22+
 - **Framework**: Express.js v5
 - **Database**: MongoDB (Atlas)
@@ -32,6 +35,7 @@ A full-stack task management application built with **Node.js + Express** backen
 - **Dev Server**: Nodemon with ts-node/esm
 
 ### Frontend
+
 - **Framework**: React v19
 - **Build Tool**: Vite v7
 - **Styling**: Tailwind CSS v4
@@ -41,6 +45,7 @@ A full-stack task management application built with **Node.js + Express** backen
 ## 📋 Requirements Met
 
 ### Week 1: Backend Development
+
 - [x] Environment setup (Node.js, Express, MongoDB)
 - [x] REST API endpoints (POST, GET, PUT, DELETE /tasks)
 - [x] Database schema (Task model with title, description, status, dueDate, user)
@@ -48,6 +53,7 @@ A full-stack task management application built with **Node.js + Express** backen
 - [x] Error handling (graceful error responses with status codes)
 
 ### Week 2: Frontend Development
+
 - [x] React project setup (Vite)
 - [x] Components (TaskCard, TaskForm/ModelForm, EditModal, TaskList pages)
 - [x] API integration (fetch with Bearer token auth)
@@ -55,6 +61,7 @@ A full-stack task management application built with **Node.js + Express** backen
 - [x] Styling & responsiveness (Tailwind CSS, grid layout, mobile-friendly)
 
 ### Week 3: Advanced Features & Polishing
+
 - [x] User authentication (register/login endpoints, JWT tokens, frontend UI)
 - [x] Search functionality (client-side filtering by title/description)
 - [x] Status filters (view tasks by status: all, completed)
@@ -65,6 +72,7 @@ A full-stack task management application built with **Node.js + Express** backen
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js v18+ and npm
 - MongoDB Atlas account (or local MongoDB)
 - Git
@@ -72,12 +80,14 @@ A full-stack task management application built with **Node.js + Express** backen
 ### Backend Setup
 
 1. **Install dependencies**:
+
    ```bash
    cd backend
    npm install
    ```
 
 2. **Create `.env` file** in `backend/` directory:
+
    ```properties
    MONGO_URI=mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/?appName=Cluster0
    PORT=8000
@@ -95,12 +105,14 @@ A full-stack task management application built with **Node.js + Express** backen
 ### Frontend Setup
 
 1. **Install dependencies**:
+
    ```bash
    cd frontend
    npm install
    ```
 
 2. **Create `.env` file** in `frontend/` (optional, defaults to localhost:8000):
+
    ```
    VITE_API_URL=http://localhost:8000
    ```
@@ -117,9 +129,11 @@ A full-stack task management application built with **Node.js + Express** backen
 ### Authentication Routes
 
 #### POST `/api/auth/register`
+
 Register a new user.
 
 **Request**:
+
 ```json
 {
   "name": "John Doe",
@@ -129,6 +143,7 @@ Register a new user.
 ```
 
 **Response** (201):
+
 ```json
 {
   "token": "eyJhbGc...",
@@ -137,9 +152,11 @@ Register a new user.
 ```
 
 #### POST `/api/auth/login`
+
 Login an existing user.
 
 **Request**:
+
 ```json
 {
   "email": "john@example.com",
@@ -148,6 +165,7 @@ Login an existing user.
 ```
 
 **Response** (200):
+
 ```json
 {
   "token": "eyJhbGc...",
@@ -156,12 +174,15 @@ Login an existing user.
 ```
 
 ### Task Routes
+
 All task endpoints require `Authorization: Bearer <token>` header.
 
 #### POST `/api/tasks`
+
 Create a new task.
 
 **Request**:
+
 ```json
 {
   "title": "Buy groceries",
@@ -172,9 +193,11 @@ Create a new task.
 ```
 
 #### GET `/api/tasks`
+
 Fetch all tasks for authenticated user.
 
 **Response**:
+
 ```json
 [
   {
@@ -190,12 +213,15 @@ Fetch all tasks for authenticated user.
 ```
 
 #### GET `/api/tasks/:id`
+
 Fetch a single task by ID (must own it).
 
 #### PUT `/api/tasks/:id`
+
 Update a task (must own it).
 
 **Request**:
+
 ```json
 {
   "title": "Buy groceries (updated)",
@@ -204,21 +230,25 @@ Update a task (must own it).
 ```
 
 #### DELETE `/api/tasks/:id`
+
 Delete a task (must own it).
 
 ## 🎨 Frontend Pages
 
 ### Login Page
+
 - Email & password input
 - Link to create account
 - Token-based session management
 
 ### Register Page
+
 - Name, email, password inputs
 - Auto-login after registration
 - Link to login page
 
 ### Dashboard
+
 - Task overview with progress indicator
 - Create new task button (modal form)
 - All user tasks displayed in grid
@@ -226,12 +256,14 @@ Delete a task (must own it).
 - Search bar at top
 
 ### Tasks Page
+
 - All non-completed tasks
 - Editable inline (edit modal)
 - Searchable & deletable
 - Same layout as dashboard
 
 ### Completed Page
+
 - Filter to show only completed tasks
 - Editable (revert status if needed)
 - Searchable & deletable
@@ -297,12 +329,14 @@ task-manager/
 ## 🧪 Testing
 
 ### Backend Build & Type Check
+
 ```bash
 cd backend
 npm run build        # Compile TypeScript
 ```
 
 ### Frontend Build
+
 ```bash
 cd frontend
 npm run build        # Build optimized dist/
@@ -313,12 +347,14 @@ npm run build        # Build optimized dist/
 To demonstrate the system:
 
 1. **Open two terminals**:
+
    - Terminal 1: Start backend (`cd backend && npm run dev`)
    - Terminal 2: Start frontend (`cd frontend && npm run dev`)
 
 2. **Open browser** to `http://localhost:5173`
 
 3. **Record using QuickTime** (macOS):
+
    - Press `Cmd + Shift + 5` → Select "Record Selection"
    - Perform the following demo steps:
      - Register a new account
@@ -337,16 +373,19 @@ To demonstrate the system:
 ## 🐛 Troubleshooting
 
 ### Backend won't start
+
 - Check `.env` file has valid `MONGO_URI`
 - Ensure MongoDB Atlas network access is enabled
 - Check `JWT_SECRET` is set (can be any string for dev)
 
 ### Frontend fetch errors (401/403)
+
 - Ensure backend is running on port 8000
 - Check token is being sent in `Authorization` header
 - Try logout and re-login
 
 ### Tailwind styles not working
+
 - Run `npm install` in frontend folder
 - Restart Vite dev server
 
