@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { API_URL } from '../config';
 import { setAuth } from '../auth';
+import Button from '../components/Button';
 
 type Props = { onLogin?: () => void };
 
@@ -27,29 +28,35 @@ export default function Login({ onLogin }: Props) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-4">
-      <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md border border-gray-200">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4">
+      <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-md border border-gray-200 dark:border-gray-700">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Welcome Back
           </h2>
-          <p className="text-gray-600">Sign in to your account</p>
+          <p className="text-gray-600 dark:text-gray-300">Sign in to your account</p>
         </div>
         {error && (
-          <div className="mb-4 p-3 text-sm text-red-600 bg-red-50 rounded-lg border border-red-200">
+          <div className="mb-4 p-3 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 rounded-lg border border-red-200 dark:border-red-800">
             {error}
           </div>
         )}
         <div className="space-y-4">
           <input
-            className="w-full border border-gray-300 rounded-lg p-3 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+            id="login-email"
+            name="email"
+            autoComplete="email"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
             placeholder="Email"
             type="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
           />
           <input
-            className="w-full border border-gray-300 rounded-lg p-3 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+            id="login-password"
+            name="password"
+            autoComplete="current-password"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
             placeholder="Password"
             type="password"
             value={password}
@@ -57,18 +64,8 @@ export default function Login({ onLogin }: Props) {
           />
         </div>
         <div className="flex justify-end gap-3 mt-6">
-          <button
-            className="px-6 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors font-medium"
-            onClick={() => { setEmail(''); setPassword(''); setError(''); }}
-          >
-            Clear
-          </button>
-          <button
-            className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium shadow-lg hover:shadow-xl"
-            onClick={handleLogin}
-          >
-            Login
-          </button>
+          <Button variant="secondary" className="px-6 py-2" onClick={() => { setEmail(''); setPassword(''); setError(''); }}>Clear</Button>
+          <Button variant="primary" className="px-6 py-2" onClick={handleLogin}>Login</Button>
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@ import { API_URL } from '../config';
 import { getToken } from '../auth';
 import { io, Socket } from 'socket.io-client';
 import type { Headers } from '../types';
+import Button from './Button';
 
 interface Notification {
   message: string;
@@ -109,9 +110,12 @@ export default function NotificationBell() {
 
   return (
     <div className="relative">
-      <button
-        onClick={handleToggle}
+      <Button
+        variant="ghost"
+        size="sm"
         className="relative p-2 text-gray-700 hover:text-gray-900 transition-colors"
+        onClick={handleToggle}
+        aria-label="Notifications"
       >
         <svg
           className="w-6 h-6"
@@ -131,7 +135,7 @@ export default function NotificationBell() {
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
-      </button>
+      </Button>
 
       {isOpen && (
         <>
@@ -142,12 +146,7 @@ export default function NotificationBell() {
           <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-gray-200 z-50 max-h-96 overflow-hidden flex flex-col">
             <div className="p-4 border-b border-gray-200 flex items-center justify-between">
               <h3 className="font-semibold text-gray-900">Notifications</h3>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                ✕
-              </button>
+              <Button size="sm" variant="ghost" className="text-gray-500 hover:text-gray-700" onClick={() => setIsOpen(false)} aria-label="Close">✕</Button>
             </div>
             <div className="overflow-y-auto flex-1">
               {notifications.length === 0 ? (

@@ -1,6 +1,7 @@
 import TaskCard from "../components/TaskCard";
 import { useState, useEffect, useCallback } from "react";
 import ModelForm from "../components/ModelForm";
+import Button from '../components/Button';
 import EditModal from "../components/EditModal";
 import { API_URL } from '../config';
 import { getToken } from '../auth';
@@ -138,20 +139,21 @@ export default function Dashboard({ showModal, setShowModal, searchTerm = "" }: 
   }) || [];
 
   return (
-    <div className="p-4 md:p-6 bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+    <div className="p-4 md:p-6 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 min-h-screen">
       <div className="mb-6 md:mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Dashboard
           </h2>
-          <p className="text-sm md:text-base text-gray-600">Manage and track your tasks efficiently</p>
+          <p className="text-sm md:text-base text-gray-600 dark:text-gray-300">Manage and track your tasks efficiently</p>
         </div>
-        <button
+        <Button
+          variant="primary"
           onClick={() => setShowAnalytics(!showAnalytics)}
-          className="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-all font-medium shadow-lg hover:shadow-xl"
+          className="px-4 py-2 rounded-lg transition-all shadow-lg hover:shadow-xl"
         >
           {showAnalytics ? 'Hide Analytics' : 'Show Analytics'}
-        </button>
+        </Button>
       </div>
 
       {/* Analytics Section */}
@@ -160,26 +162,22 @@ export default function Dashboard({ showModal, setShowModal, searchTerm = "" }: 
           <div className="flex items-center justify-between">
             <h3 className="text-xl md:text-2xl font-bold text-gray-900">Analytics</h3>
             <div className="flex gap-2">
-              <button
+              <Button
+                size="sm"
+                variant={period === 'weekly' ? 'primary' : 'secondary'}
+                className="px-4 py-2 rounded-lg text-sm"
                 onClick={() => setPeriod('weekly')}
-                className={`px-4 py-2 rounded-lg transition-colors text-sm ${
-                  period === 'weekly'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white'
-                }`}
               >
                 Weekly
-              </button>
-              <button
+              </Button>
+              <Button
+                size="sm"
+                variant={period === 'monthly' ? 'primary' : 'secondary'}
+                className="px-4 py-2 rounded-lg text-sm"
                 onClick={() => setPeriod('monthly')}
-                className={`px-4 py-2 rounded-lg transition-colors text-sm ${
-                  period === 'monthly'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white'
-                }`}
               >
                 Monthly
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -347,21 +345,28 @@ function ProgressIndicator({ tasks }: { tasks: Task[] }) {
   const inProgress = tasks.filter((t) => t.status === 'in-progress').length;
   const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
 
+  // choose bar class based on completion percentage
+  let barClass = 'bg-gradient-to-r from-blue-600 to-purple-600';
+  if (pct === 100) barClass = 'bg-gradient-to-r from-green-400 to-green-600';
+  else if (pct < 50) barClass = 'bg-gradient-to-r from-yellow-400 to-yellow-500';
+
+  const pctTextClass = pct === 100 ? 'text-green-600' : pct < 50 ? 'text-yellow-600' : 'text-gray-900';
+
   return (
     <div className="mb-6 bg-white rounded-xl p-6 shadow-lg border border-gray-200">
       <div className="flex items-center justify-between mb-4">
         <div>
           <div className="text-sm font-medium text-gray-600 mb-1">Overall Progress</div>
-          <div className="text-3xl font-bold text-gray-900">{pct}%</div>
+          <div className={`text-3xl font-bold ${pctTextClass}`}>{pct}%</div>
         </div>
         <div className="text-right">
           <div className="text-2xl font-bold text-gray-900">{completed}/{total}</div>
           <div className="text-sm text-gray-600">Tasks Completed</div>
         </div>
       </div>
-      <div className="w-full bg-gray-200 rounded-full h-4 mb-4 overflow-hidden">
+      <div className="w-full bg-gray-200 rounded-full h-5 mb-4 overflow-hidden border border-gray-100">
         <div 
-          className="bg-gradient-to-r from-blue-600 to-purple-600 h-4 rounded-full transition-all duration-500" 
+          className={`${barClass} h-5 rounded-full transition-all duration-500 text-white`} 
           style={{ width: `${pct}%` }} 
         />
       </div>

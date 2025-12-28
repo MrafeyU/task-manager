@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import Button from './Button';
 import { API_URL } from '../config';
 import { getToken } from '../auth';
 import { Paperclip } from 'lucide-react';
@@ -136,18 +137,15 @@ export default function EditModal({ show, task, onClose, onUpdated }: EditModalP
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 overflow-y-auto">
       <div key={taskId} className="bg-white w-full max-w-md p-4 md:p-8 rounded-2xl shadow-2xl space-y-4 md:space-y-5 transform transition duration-200 ease-out animate-fade-in border border-gray-200 my-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
             Edit Task
           </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 transition-colors"
-          >
-            ✕
-          </button>
+          <Button size="sm" variant="ghost" className="text-gray-500 hover:text-gray-700 transition-colors" onClick={onClose} aria-label="Close">✕</Button>
         </div>
 
         <input
+          id="edit-title"
+          name="title"
           className="w-full border border-gray-300 rounded-lg p-3 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -155,6 +153,8 @@ export default function EditModal({ show, task, onClose, onUpdated }: EditModalP
         />
 
         <textarea
+          id="edit-description"
+          name="description"
           className="w-full border border-gray-300 rounded-lg p-3 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none"
           rows={4}
           value={description}
@@ -163,6 +163,8 @@ export default function EditModal({ show, task, onClose, onUpdated }: EditModalP
         />
 
         <select
+          id="edit-status"
+          name="status"
           className="w-full border border-gray-300 rounded-lg p-3 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
           value={status}
           onChange={(e) => setStatus(e.target.value as 'pending' | 'in-progress' | 'completed')}
@@ -174,10 +176,12 @@ export default function EditModal({ show, task, onClose, onUpdated }: EditModalP
 
         {/* File Upload */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="attachments" className="block text-sm font-medium text-gray-700 mb-2">
             Attachments
           </label>
           <input
+            id="attachments"
+            name="attachments"
             ref={fileInputRef}
             type="file"
             multiple
@@ -190,12 +194,7 @@ export default function EditModal({ show, task, onClose, onUpdated }: EditModalP
               {selectedFiles.map((file, index) => (
                 <div key={index} className="text-xs text-gray-600 flex items-center justify-between bg-gray-50 p-2 rounded">
                   <span>{file.name} ({(file.size / 1024).toFixed(1)} KB)</span>
-                  <button
-                    onClick={() => setSelectedFiles(selectedFiles.filter((_, i) => i !== index))}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    ✕
-                  </button>
+                  <Button size="sm" variant="danger" className="px-2 py-1" onClick={() => setSelectedFiles(selectedFiles.filter((_, i) => i !== index))}>✕</Button>
                 </div>
               ))}
             </div>
@@ -223,12 +222,7 @@ export default function EditModal({ show, task, onClose, onUpdated }: EditModalP
                       {attachment.originalName}
                       <span className="text-xs text-gray-500">({formatFileSize(attachment.size)})</span>
                     </a>
-                    <button
-                      onClick={() => handleDeleteAttachment(attachmentId)}
-                      className="text-red-500 hover:text-red-700 ml-2"
-                    >
-                      Delete
-                    </button>
+                    <Button size="sm" variant="danger" className="ml-2 px-3 py-1" onClick={() => handleDeleteAttachment(attachmentId)}>Delete</Button>
                   </div>
                 );
               })}
@@ -237,18 +231,8 @@ export default function EditModal({ show, task, onClose, onUpdated }: EditModalP
         )}
 
         <div className="flex justify-end gap-3 pt-2">
-          <button
-            onClick={onClose}
-            className="px-6 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors font-medium"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleUpdate}
-            className="px-6 py-2 bg-linear-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium shadow-lg hover:shadow-xl"
-          >
-            Update
-          </button>
+          <Button variant="secondary" className="px-6 py-2" onClick={onClose}>Cancel</Button>
+          <Button variant="primary" className="px-6 py-2" onClick={handleUpdate}>Update</Button>
         </div>
       </div>
     </div>

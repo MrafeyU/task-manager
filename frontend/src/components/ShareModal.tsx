@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import API_URL from '../config';
 import type { Headers } from '../types';
+import Button from './Button';
 
 type ShareModalProps = {
   show: boolean;
@@ -85,11 +86,13 @@ export default function ShareModal({ show, taskId, onClose, onShared }: ShareMod
           <h3 className="text-2xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Share Task
           </h3>
-          <button className="text-gray-500 hover:text-gray-700 transition-colors" onClick={onClose}>✕</button>
+          <Button size="sm" variant="ghost" className="text-gray-500 hover:text-gray-700 transition-colors" onClick={onClose} aria-label="Close">✕</Button>
         </div>
 
         <div className="mb-4">
           <input
+            id="share-query"
+            name="query"
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -111,6 +114,7 @@ export default function ShareModal({ show, taskId, onClose, onShared }: ShareMod
             users.map((u) => (
               <label key={u._id} className="flex items-center gap-3 p-3 border-b border-gray-200 last:border-b-0 hover:bg-gray-50 transition-colors cursor-pointer">
                 <input
+                  name={`share_user_${u._id}`}
                   type="checkbox"
                   checked={!!selected[u._id]}
                   onChange={() => toggle(u._id)}
@@ -126,20 +130,8 @@ export default function ShareModal({ show, taskId, onClose, onShared }: ShareMod
         </div>
 
         <div className="flex justify-end gap-3">
-          <button 
-            className="px-6 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors font-medium" 
-            onClick={onClose} 
-            disabled={loading}
-          >
-            Cancel
-          </button>
-          <button 
-            className="px-6 py-2 rounded-lg bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 transition-all font-medium shadow-lg hover:shadow-xl disabled:opacity-50" 
-            onClick={submitShare} 
-            disabled={loading}
-          >
-            {loading ? 'Sharing...' : 'Share'}
-          </button>
+          <Button variant="secondary" className="px-6 py-2" onClick={onClose} disabled={loading}>Cancel</Button>
+          <Button variant="success" className="px-6 py-2" onClick={submitShare} disabled={loading}>{loading ? 'Sharing...' : 'Share'}</Button>
         </div>
       </div>
     </div>

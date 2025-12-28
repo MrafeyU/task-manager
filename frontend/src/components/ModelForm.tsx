@@ -2,6 +2,7 @@ import { useState } from "react";
 import { API_URL } from '../config';
 import { getToken } from '../auth';
 import type { TaskInput, Headers } from '../types';
+import Button from './Button';
 
 interface ModalProps {
   showModal: boolean;
@@ -76,15 +77,12 @@ export default function ModelForm({ showModal, setShowModal, onTaskAdded  }: Mod
           <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Add New Task
           </h2>
-          <button
-            onClick={() => setShowModal(false)}
-            className="text-gray-500 hover:text-gray-700 transition-colors"
-          >
-            ✕
-          </button>
+          <Button size="sm" variant="ghost" className="text-gray-500 hover:text-gray-700 transition-colors" onClick={() => setShowModal(false)} aria-label="Close">✕</Button>
         </div>
 
         <input
+          id="task-title"
+          name="title"
           type="text"
           placeholder="Task Title"
           className="w-full border border-gray-300 rounded-lg p-3 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
@@ -93,6 +91,8 @@ export default function ModelForm({ showModal, setShowModal, onTaskAdded  }: Mod
         />
 
         <textarea
+          id="task-description"
+          name="description"
           placeholder="Task Description"
           className="w-full border border-gray-300 rounded-lg p-3 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none"
           rows={4}
@@ -102,6 +102,8 @@ export default function ModelForm({ showModal, setShowModal, onTaskAdded  }: Mod
 
         <div className="grid grid-cols-2 gap-3">
           <input
+            id="task-dueDate"
+            name="dueDate"
             type="date"
             className="w-full border border-gray-300 rounded-lg p-3 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
             value={dueDate}
@@ -109,6 +111,8 @@ export default function ModelForm({ showModal, setShowModal, onTaskAdded  }: Mod
           />
 
           <input
+            id="task-dueTime"
+            name="dueTime"
             type="time"
             className="w-full border border-gray-300 rounded-lg p-3 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
             value={dueTime}
@@ -117,6 +121,8 @@ export default function ModelForm({ showModal, setShowModal, onTaskAdded  }: Mod
         </div>
 
         <select
+          id="task-status"
+          name="status"
           className="w-full border border-gray-300 rounded-lg p-3 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
           value={status}
           onChange={(e) => setStatus(e.target.value as 'pending' | 'in-progress' | 'completed')}
@@ -127,19 +133,21 @@ export default function ModelForm({ showModal, setShowModal, onTaskAdded  }: Mod
         </select>
 
         <div className="flex justify-end gap-3 pt-2">
-          <button
-            className="px-6 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors font-medium"
+          <Button
+            variant="secondary"
+            className="px-6 py-2"
             onClick={() => setShowModal(false)}
           >
             Cancel
-          </button>
+          </Button>
 
-          <button
-            className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium shadow-lg hover:shadow-xl"
+          <Button
+            variant="primary"
+            className="px-6 py-2"
             onClick={handleAddTask}
           >
             Add Task
-          </button>
+          </Button>
         </div>
       </div>
     </div>
