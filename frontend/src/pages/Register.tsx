@@ -20,9 +20,10 @@ export default function Register({ onRegister }: Props) {
       const data = await res.json();
       if (!res.ok) return setError(data.error || 'Register failed');
       setAuth(data.token, data.user);
-      onRegister && onRegister();
-    } catch (err:any) {
-      setError(err.message || 'Register error');
+      onRegister?.();
+    } catch (err) {
+      const error = err as Error;
+      setError(error.message || 'Register error');
     }
   };
 

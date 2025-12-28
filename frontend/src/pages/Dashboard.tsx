@@ -1,10 +1,11 @@
 import TaskCard from "../components/TaskCard";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import ModelForm from "../components/ModelForm";
 import EditModal from "../components/EditModal";
 import { API_URL } from '../config';
 import { getToken } from '../auth';
 import { ClipboardList } from 'lucide-react';
+import type { Task, Headers, OverviewData, TrendsData, TrendItem } from '../types';
 import {
   LineChart,
   Line,
@@ -31,18 +32,18 @@ type DashboardProps = {
 
 export default function Dashboard({ showModal, setShowModal, searchTerm = "" }: DashboardProps) {
   
-  const [selectedTask, setSelectedTask] = useState(null);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [Tasks, setTask] = useState([]);
-  const [overview, setOverview] = useState<any>(null);
-  const [trends, setTrends] = useState<any>(null);
+  const [Tasks, setTask] = useState<Task[]>([]);
+  const [overview, setOverview] = useState<OverviewData | null>(null);
+  const [trends, setTrends] = useState<TrendsData | null>(null);
   const [period, setPeriod] = useState<'weekly' | 'monthly'>('monthly');
   const [showAnalytics, setShowAnalytics] = useState(false);
 
-  const fetchTasks = async () => {
+  const fetchTasks = useCallback(async () => {
     try {
       const token = getToken();
-      const headers: any = {};
+      const headers: Headers = {};
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
       const res = await fetch(`${API_URL}/api/tasks`, { headers });
@@ -51,12 +52,12 @@ export default function Dashboard({ showModal, setShowModal, searchTerm = "" }: 
     } catch (err) {
       console.error("Error fetching tasks:", err);
     }
-  };
+  }, []);
 
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = useCallback(async () => {
     try {
       const token = getToken();
-      const headers: any = {};
+      const headers: Headers = {};
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
       const [overviewRes, trendsRes] = await Promise.all([
@@ -64,30 +65,35 @@ export default function Dashboard({ showModal, setShowModal, searchTerm = "" }: 
         fetch(`${API_URL}/api/analytics/trends?period=${period}`, { headers })
       ]);
 
-      const overviewData = await overviewRes.json();
-      const trendsData = await trendsRes.json();
+      const overviewData = await overviewRes.json() as OverviewData;
+      const trendsData = await trendsRes.json() as TrendsData;
 
       setOverview(overviewData);
       setTrends(trendsData);
     } catch (err) {
       console.error('Error fetching analytics:', err);
     }
-  };
+  }, [period]);
 
   useEffect(() => {
-    fetchTasks();
-    fetchAnalytics();
-  }, []);
+    // These are async functions that set state asynchronously, not direct setState calls
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void fetchTasks();
+    void fetchAnalytics();
+  }, [fetchTasks, fetchAnalytics]);
 
   useEffect(() => {
     if (showAnalytics) {
-      fetchAnalytics();
+      // This is an async function that sets state asynchronously, not a direct setState call
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      void fetchAnalytics();
     }
-  }, [period, showAnalytics]);
+  }, [showAnalytics, fetchAnalytics]);
+
   const handleDelete = async (id: string) => {
     try {
       const token = getToken();
-      const headers: any = {};
+      const headers: Headers = {};
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
       await fetch(`${API_URL}/api/tasks/${id}`, { method: "DELETE", headers });
@@ -97,9 +103,9 @@ export default function Dashboard({ showModal, setShowModal, searchTerm = "" }: 
     }
   };
 
-  const openUpdateModal = (task: any) => {
-  setSelectedTask(task);
-  setShowEditModal(true);
+  const openUpdateModal = (task: Task) => {
+    setSelectedTask(task);
+    setShowEditModal(true);
   };
 
 
@@ -122,8 +128,8 @@ export default function Dashboard({ showModal, setShowModal, searchTerm = "" }: 
     { label: 'Overdue', value: overview.overdueTasks, color: 'bg-red-500' }
   ] : [];
 
-  const trendData = trends?.completed?.map((item: any) => {
-    const overdueItem = trends?.overdue?.find((o: any) => o.date === item.date);
+  const trendData = trends?.completed?.map((item: TrendItem) => {
+    const overdueItem = trends?.overdue?.find((o: TrendItem) => o.date === item.date);
     return {
       date: item.date,
       completed: item.count,
@@ -293,14 +299,14 @@ export default function Dashboard({ showModal, setShowModal, searchTerm = "" }: 
       <ProgressIndicator tasks={Tasks} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-        {Tasks.filter((t:any) => {
+        {Tasks.filter((t: Task) => {
           const q = (searchTerm || "").toLowerCase();
           if (!q) return true;
           return (
             t.title.toLowerCase().includes(q) ||
             (t.description && t.description.toLowerCase().includes(q))
           );
-        }).map((task: any) => (
+        }).map((task: Task) => (
           <TaskCard 
                 key={task._id} 
                 task={task}
@@ -334,7 +340,7 @@ export default function Dashboard({ showModal, setShowModal, searchTerm = "" }: 
   );
 }
 
-function ProgressIndicator({ tasks }: { tasks: any[] }) {
+function ProgressIndicator({ tasks }: { tasks: Task[] }) {
   const total = tasks.length || 0;
   const completed = tasks.filter((t) => t.status === 'completed').length;
   const pending = tasks.filter((t) => t.status === 'pending').length;

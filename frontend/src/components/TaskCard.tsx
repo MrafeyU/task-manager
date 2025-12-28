@@ -1,25 +1,6 @@
 import { API_URL } from '../config';
 import { Calendar, Paperclip, Check, RefreshCw, Circle } from 'lucide-react';
-
-interface TaskAttachment {
-  _id?: string;
-  filename?: string;
-  originalName: string;
-  path: string;
-  size: number;
-  mimetype?: string;
-  uploadedAt?: Date | string;
-}
-
-interface Task {
-  _id: string;
-  title: string;
-  description?: string;
-  status?: 'pending' | 'in-progress' | 'completed';
-  dueDate?: Date | string;
-  createdAt?: Date | string;
-  attachments?: TaskAttachment[];
-}
+import type { Task, TaskAttachment } from '../types';
 
 interface TaskCardProps {
   task: Task;

@@ -2,20 +2,21 @@ import TaskCard from "../components/TaskCard";
 import { useState, useEffect } from "react";
 import EditModal from "../components/EditModal";
 import { API_URL } from '../config';
+import type { Task, Headers } from '../types';
 
 type CompletedProps = {
   searchTerm?: string;
 };
 
 export default function Completed({ searchTerm = "" }: CompletedProps) {
-  const [tasks, setTasks] = useState<any[]>([]);
-  const [selectedTask, setSelectedTask] = useState<any>(null);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
 
   const fetchTasks = async () => {
     try {
       const token = (await import('../auth')).getToken();
-      const headers: any = {};
+      const headers: Headers = {};
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
       const res = await fetch(`${API_URL}/api/tasks`, { headers });
@@ -57,7 +58,7 @@ export default function Completed({ searchTerm = "" }: CompletedProps) {
             onDelete={async (id: string) => {
               try {
                 const token = (await import('../auth')).getToken();
-                const headers: any = {};
+                const headers: Headers = {};
                 if (token) headers['Authorization'] = `Bearer ${token}`;
 
                 await fetch(`${API_URL}/api/tasks/${id}`, { method: 'DELETE', headers });
@@ -66,7 +67,7 @@ export default function Completed({ searchTerm = "" }: CompletedProps) {
                 console.error('Failed to delete', err);
               }
             }}
-            onEdit={(t:any) => {
+            onEdit={(t: Task) => {
               setSelectedTask(t);
               setShowEditModal(true);
             }}

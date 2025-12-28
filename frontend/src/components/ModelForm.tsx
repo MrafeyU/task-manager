@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { API_URL } from '../config';
 import { getToken } from '../auth';
+import type { TaskInput, Headers } from '../types';
 
 interface ModalProps {
   showModal: boolean;
@@ -26,7 +27,7 @@ export default function ModelForm({ showModal, setShowModal, onTaskAdded  }: Mod
       }
     }
 
-    const newTask: any = {
+    const newTask: TaskInput = {
       title,
       description,
       status
@@ -36,7 +37,7 @@ export default function ModelForm({ showModal, setShowModal, onTaskAdded  }: Mod
 
     try {
       const token = getToken();
-      const headers: any = { "Content-Type": "application/json" };
+      const headers: Headers = { "Content-Type": "application/json" };
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
       const res = await fetch(`${API_URL}/api/tasks`, {

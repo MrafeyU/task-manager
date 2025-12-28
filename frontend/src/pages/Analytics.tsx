@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { API_URL } from '../config';
 import { getToken } from '../auth';
 import {
@@ -19,21 +19,38 @@ import {
 
 const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444'];
 
+interface OverviewData {
+  totalTasks: number;
+  completedTasks: number;
+  pendingTasks: number;
+  inProgressTasks: number;
+  overdueTasks: number;
+}
+
+interface TrendItem {
+  date: string;
+  count: number;
+}
+
+interface TrendsData {
+  period: string;
+  completed: TrendItem[];
+  overdue: TrendItem[];
+}
+
+type Headers = Record<string, string>;
+
 export default function Analytics() {
-  const [overview, setOverview] = useState<any>(null);
-  const [trends, setTrends] = useState<any>(null);
+  const [overview, setOverview] = useState<OverviewData | null>(null);
+  const [trends, setTrends] = useState<TrendsData | null>(null);
   const [period, setPeriod] = useState<'weekly' | 'monthly'>('monthly');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchAnalytics();
-  }, [period]);
-
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = useCallback(async () => {
     try {
       setLoading(true);
       const token = getToken();
-      const headers: any = {};
+      const headers: Headers = {};
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
       const [overviewRes, trendsRes] = await Promise.all([
@@ -41,8 +58,8 @@ export default function Analytics() {
         fetch(`${API_URL}/api/analytics/trends?period=${period}`, { headers })
       ]);
 
-      const overviewData = await overviewRes.json();
-      const trendsData = await trendsRes.json();
+      const overviewData = await overviewRes.json() as OverviewData;
+      const trendsData = await trendsRes.json() as TrendsData;
 
       setOverview(overviewData);
       setTrends(trendsData);
@@ -51,7 +68,11 @@ export default function Analytics() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [period]);
+
+  useEffect(() => {
+    fetchAnalytics();
+  }, [fetchAnalytics]);
 
   if (loading) {
     return (
@@ -76,8 +97,8 @@ export default function Analytics() {
   ] : [];
 
   // Prepare trend data for charts
-  const trendData = trends?.completed?.map((item: any) => {
-    const overdueItem = trends?.overdue?.find((o: any) => o.date === item.date);
+  const trendData = trends?.completed?.map((item: TrendItem) => {
+    const overdueItem = trends?.overdue?.find((o: TrendItem) => o.date === item.date);
     return {
       date: item.date,
       completed: item.count,
@@ -145,7 +166,11 @@ export default function Analytics() {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) => {
+                    const nameStr = name ?? '';
+                    const percentValue = percent ?? 0;
+                    return `${nameStr} ${(percentValue * 100).toFixed(0)}%`;
+                  }}
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"
@@ -155,6 +180,7 @@ export default function Analytics() {
                   ))}
                 </Pie>
                 <Tooltip />
+                <Legend />
               </PieChart>
             </ResponsiveContainer>
           ) : (

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { API_URL } from '../config';
 import { getToken } from '../auth';
 import { io, Socket } from 'socket.io-client';
+import type { Headers } from '../types';
 
 interface Notification {
   message: string;
@@ -20,7 +21,7 @@ export default function NotificationBell() {
     const fetchNotifications = async () => {
       try {
         const token = getToken();
-        const headers: any = {};
+        const headers: Headers = {};
         if (token) headers['Authorization'] = `Bearer ${token}`;
         const res = await fetch(`${API_URL}/api/tasks/notifications`, { headers });
         const data = await res.json();

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import API_URL from '../config';
+import type { Headers } from '../types';
 
 type ShareModalProps = {
   show: boolean;
@@ -21,7 +22,7 @@ export default function ShareModal({ show, taskId, onClose, onShared }: ShareMod
       try {
         setError(null);
         const token = (await import('../auth')).getToken();
-        const headers: any = {};
+        const headers: Headers = {};
         if (token) headers['Authorization'] = `Bearer ${token}`;
         const url = new URL(`${API_URL}/api/auth/users`);
         if (query) url.searchParams.set('q', query);
@@ -29,8 +30,9 @@ export default function ShareModal({ show, taskId, onClose, onShared }: ShareMod
         if (!res.ok) throw new Error(`Failed to load users (${res.status})`);
         const data = await res.json();
         setUsers(data);
-      } catch (e: any) {
-        setError(e?.message || 'Failed to load users');
+      } catch (e) {
+        const error = e as Error;
+        setError(error?.message || 'Failed to load users');
       }
     };
     run();
@@ -52,7 +54,7 @@ export default function ShareModal({ show, taskId, onClose, onShared }: ShareMod
         return;
       }
       const token = (await import('../auth')).getToken();
-      const headers: any = { 'Content-Type': 'application/json' };
+      const headers: Headers = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
       const res = await fetch(`${API_URL}/api/tasks/${taskId}/share`, {
         method: 'PUT',
@@ -66,8 +68,9 @@ export default function ShareModal({ show, taskId, onClose, onShared }: ShareMod
       onShared();
       onClose();
       setSelected({});
-    } catch (e: any) {
-      setError(e?.message || 'Share failed');
+    } catch (e) {
+      const error = e as Error;
+      setError(error?.message || 'Share failed');
     } finally {
       setLoading(false);
     }

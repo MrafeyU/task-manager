@@ -19,9 +19,10 @@ export default function Login({ onLogin }: Props) {
       const data = await res.json();
       if (!res.ok) return setError(data.error || 'Login failed');
       setAuth(data.token, data.user);
-      onLogin && onLogin();
-    } catch (err:any) {
-      setError(err.message || 'Login error');
+      onLogin?.();
+    } catch (err) {
+      const error = err as Error;
+      setError(error.message || 'Login error');
     }
   };
 
