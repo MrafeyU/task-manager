@@ -21,7 +21,6 @@ export default function App() {
         return <Tasks searchTerm={searchTerm} />;
       case "Completed":
         return <Completed searchTerm={searchTerm} />;
-      /* Settings page removed */
       default:
         return (
           <Dashboard
@@ -52,12 +51,14 @@ export default function App() {
   }
 
   return (
-    <div className="flex">
+    <div className="flex flex-col md:flex-row bg-gray-50 min-h-screen">
       <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-w-0">
         <Topbar setShowModal={setShowModal} onSearch={setSearchTerm} />
-        {renderPage()}
+        <div className="flex-1 overflow-auto">
+          {renderPage()}
+        </div>
       </div>
     </div>
   );

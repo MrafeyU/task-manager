@@ -26,15 +26,48 @@ export default function Login({ onLogin }: Props) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="bg-white p-8 rounded shadow-md w-96">
-        <h2 className="text-2xl mb-4">Login</h2>
-        {error && <div className="text-red-500 mb-2">{error}</div>}
-        <input className="w-full border p-2 mb-2 rounded" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
-        <input className="w-full border p-2 mb-2 rounded" placeholder="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
-        <div className="flex justify-end gap-2">
-          <button className="px-4 py-2 rounded border" onClick={() => { setEmail(''); setPassword(''); }}>Clear</button>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded" onClick={handleLogin}>Login</button>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-4">
+      <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md border border-gray-200">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            Welcome Back
+          </h2>
+          <p className="text-gray-600">Sign in to your account</p>
+        </div>
+        {error && (
+          <div className="mb-4 p-3 text-sm text-red-600 bg-red-50 rounded-lg border border-red-200">
+            {error}
+          </div>
+        )}
+        <div className="space-y-4">
+          <input
+            className="w-full border border-gray-300 rounded-lg p-3 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+            placeholder="Email"
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+          />
+          <input
+            className="w-full border border-gray-300 rounded-lg p-3 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+            placeholder="Password"
+            type="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+          />
+        </div>
+        <div className="flex justify-end gap-3 mt-6">
+          <button
+            className="px-6 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors font-medium"
+            onClick={() => { setEmail(''); setPassword(''); setError(''); }}
+          >
+            Clear
+          </button>
+          <button
+            className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium shadow-lg hover:shadow-xl"
+            onClick={handleLogin}
+          >
+            Login
+          </button>
         </div>
       </div>
     </div>

@@ -44,3 +44,22 @@ const login = async (req: Request, res: Response): Promise<any> => {
 };
 
 export { register, login };
+
+// List users for sharing (protected)
+export const listUsers = async (req: Request & { user?: any }, res: Response): Promise<any> => {
+  try {
+    const me = req.user?.id;
+    const q = (req.query.q as string | undefined)?.trim();
+    const filter: any = { _id: { $ne: me } };
+    if (q) {
+      filter.$or = [
+        { name: { $regex: q, $options: 'i' } },
+        { email: { $regex: q, $options: 'i' } },
+      ];
+    }
+    const users = await User.find(filter).select('_id name email').limit(50);
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to list users', details: err });
+  }
+};

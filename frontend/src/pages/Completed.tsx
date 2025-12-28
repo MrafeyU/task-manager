@@ -41,10 +41,15 @@ export default function Completed({ searchTerm = "" }: CompletedProps) {
     });
 
   return (
-    <div className="p-6">
-      <h2 className="text-3xl font-bold mb-6">Completed Tasks</h2>
+    <div className="p-6 bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+      <div className="mb-8">
+        <h2 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          Completed Tasks
+        </h2>
+        <p className="text-gray-600">View your completed tasks</p>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filtered.map((task) => (
           <TaskCard
             key={task._id}
