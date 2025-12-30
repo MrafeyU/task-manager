@@ -40,22 +40,31 @@ export default function Topbar({ setShowModal, onSearch, forceTheme, setForceThe
         <div className="flex items-center gap-2">
         
 
-          {import.meta.env.DEV && typeof setForceTheme === 'function' && (
+          {typeof setForceTheme === 'function' && (
             <div className="hidden md:flex items-center gap-2">
               <Button
-                title="Force Light (dev-only)"
-                variant="secondary"
+                title="System theme"
+                variant={forceTheme === 'system' ? 'primary' : 'secondary'}
                 size="sm"
-                className={`${forceTheme === 'light' ? 'bg-white text-gray-800 border-gray-300' : 'bg-transparent text-gray-500 dark:text-gray-300'}`}
+                className={`${forceTheme === 'system' ? 'px-3' : 'px-2'}`}
+                onClick={() => setForceTheme('system')}
+              >
+                System
+              </Button>
+              <Button
+                title="Light theme"
+                variant={forceTheme === 'light' ? 'primary' : 'secondary'}
+                size="sm"
+                className={`${forceTheme === 'light' ? 'px-3' : 'px-2'}`}
                 onClick={() => setForceTheme('light')}
               >
                 Light
               </Button>
               <Button
-                title="Force Dark (dev-only)"
-                variant="secondary"
+                title="Dark theme"
+                variant={forceTheme === 'dark' ? 'primary' : 'secondary'}
                 size="sm"
-                className={`${forceTheme === 'dark' ? 'bg-gray-800 text-white border-gray-700' : 'bg-transparent text-gray-500 dark:text-gray-300'}`}
+                className={`${forceTheme === 'dark' ? 'px-3' : 'px-2'}`}
                 onClick={() => setForceTheme('dark')}
               >
                 Dark

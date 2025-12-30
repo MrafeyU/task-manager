@@ -5,6 +5,24 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Task Manager</title>
+    <!-- Early theme application to avoid flash of wrong theme on load -->
+    <script>
+      (function(){
+        try{
+          var force = localStorage.getItem('forceTheme');
+          if (force === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.add('force-dark');
+          } else if (force === 'light') {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.classList.add('force-light');
+          } else {
+            var m = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+            if (m && m.matches) document.documentElement.classList.add('dark');
+          }
+        }catch(e){/* ignore */}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -25,7 +25,7 @@ export default function App() {
   // Apply force theme overrides (DEV only). This injects a high-specificity stylesheet
   // to help with debugging situations where OS/browser forces a dark presentation.
   useEffect(() => {
-    if (!import.meta.env.DEV) return; // Only active in development
+    // Apply force-theme overrides (used to help with debug and to allow explicit user control).
 
     const lightStyles = `
 /* Force Light overrides (dev-only) */
