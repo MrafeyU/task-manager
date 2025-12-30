@@ -96,6 +96,8 @@ A full-stack task management application built with **Node.js + Express** backen
 
    **Deployment note:** When deploying to a hosting provider (Render, Vercel, Heroku, etc.), set `MONGO_URI`, `PORT`, and `JWT_SECRET` in the platform's environment/secret settings. Avoid committing `.env` to the repository and rotate credentials if secrets are accidentally committed. For Atlas, ensure the service's outbound IPs are included in the Atlas Network Access list or configure VPC peering for production-grade security.
 
+   **Health check:** The server exposes a lightweight health endpoint at `GET /api/health` which returns `{ status: 'ok' | 'error', db: 'connected'|'disconnected'|'connecting'|'disconnecting' }`. Use this endpoint in your platform's readiness/health probes to confirm the server and DB are reachable.
+
 3. **Start dev server**:
    ```bash
    npm run dev
