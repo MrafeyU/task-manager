@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import taskRoutes from './routes/taskRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
+import healthRoutes from './routes/healthRoutes.js';
 import cors from 'cors';
 import { createServer } from 'http';
 import { initializeSocket } from './config/socket.js';
@@ -62,6 +63,8 @@ if (existsSync(uploadsDir)) {
 app.use('/api/tasks', taskRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/analytics', analyticsRoutes);
+// Health check endpoint
+app.use('/api/health', healthRoutes);
 
 const httpServer = createServer(app);
 initializeSocket(httpServer);
