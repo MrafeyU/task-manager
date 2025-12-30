@@ -1,11 +1,12 @@
 import NotificationBell from './NotificationBell';
 import Button from './Button';
+import { Sun, Moon } from 'lucide-react';
 
 interface TopbarProps {
   setShowModal: (value: boolean) => void;
   onSearch?: (q: string) => void;
-  forceTheme?: 'system'|'light'|'dark';
-  setForceTheme?: (value: 'system'|'light'|'dark') => void;
+  forceTheme?: 'light'|'dark';
+  setForceTheme?: (value: 'light'|'dark') => void;
 }
 
 export default function Topbar({ setShowModal, onSearch, forceTheme, setForceTheme }: TopbarProps) {
@@ -41,33 +42,15 @@ export default function Topbar({ setShowModal, onSearch, forceTheme, setForceThe
         
 
           {typeof setForceTheme === 'function' && (
-            <div className="hidden md:flex items-center gap-2">
+            <div className="flex items-center gap-2">
               <Button
-                title="System theme"
-                variant={forceTheme === 'system' ? 'primary' : 'secondary'}
+                title={forceTheme === 'dark' ? 'Switch to light' : 'Switch to dark'}
+                variant="secondary"
                 size="sm"
-                className={`${forceTheme === 'system' ? 'px-3' : 'px-2'}`}
-                onClick={() => setForceTheme('system')}
+                className="p-2"
+                onClick={() => setForceTheme(forceTheme === 'dark' ? 'light' : 'dark')}
               >
-                System
-              </Button>
-              <Button
-                title="Light theme"
-                variant={forceTheme === 'light' ? 'primary' : 'secondary'}
-                size="sm"
-                className={`${forceTheme === 'light' ? 'px-3' : 'px-2'}`}
-                onClick={() => setForceTheme('light')}
-              >
-                Light
-              </Button>
-              <Button
-                title="Dark theme"
-                variant={forceTheme === 'dark' ? 'primary' : 'secondary'}
-                size="sm"
-                className={`${forceTheme === 'dark' ? 'px-3' : 'px-2'}`}
-                onClick={() => setForceTheme('dark')}
-              >
-                Dark
+                {forceTheme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" /> }
               </Button>
             </div>
           )}
