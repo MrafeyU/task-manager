@@ -18,8 +18,16 @@ export default function App() {
   // No manual dark toggle UI anymore; determine effective theme from `forceTheme` (dev-only) or system preference
   // and apply the `dark` class accordingly.
 
-  const [forceTheme, setForceTheme] = useState<'system'|'light'|'dark'>(() => {
-    return (localStorage.getItem('forceTheme') as 'system'|'light'|'dark') || 'system';
+  const [forceTheme, setForceTheme] = useState<'light'|'dark'>(() => {
+    // Prefer an explicit stored choice; otherwise use OS preference
+    try {
+      const stored = localStorage.getItem('forceTheme') as 'light'|'dark' | null;
+      if (stored === 'light' || stored === 'dark') return stored;
+      const prefersDark = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      return prefersDark ? 'dark' : 'light';
+    } catch (e) {
+      return 'light';
+    }
   });
 
   // Apply force theme overrides (DEV only). This injects a high-specificity stylesheet
@@ -129,20 +137,16 @@ html.force-dark .bg-white {
 }
 `;
 
-    const apply = (mode: 'system'|'light'|'dark') => {
+    const apply = (mode: 'light'|'dark') => {
       const existing = document.getElementById('force-theme-style');
       if (existing) existing.remove();
       document.documentElement.classList.remove('force-light', 'force-dark');
-      if (mode === 'system') {
-        localStorage.removeItem('forceTheme');
-        return;
-      }
       const style = document.createElement('style');
       style.id = 'force-theme-style';
       style.textContent = mode === 'light' ? lightStyles : darkStyles;
       document.head.appendChild(style);
       document.documentElement.classList.add(mode === 'light' ? 'force-light' : 'force-dark');
-      localStorage.setItem('forceTheme', mode);
+      try { localStorage.setItem('forceTheme', mode); } catch (e) { /* ignore */ }
     };
 
     apply(forceTheme);
@@ -150,7 +154,7 @@ html.force-dark .bg-white {
 
   useEffect(() => {
     const prefersDark = typeof window !== 'undefined' && window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)').matches : false;
-    const effectiveDark = forceTheme === 'dark' ? true : forceTheme === 'light' ? false : prefersDark;
+    const effectiveDark = forceTheme === 'dark';
 
     if (effectiveDark) document.documentElement.classList.add('dark');
     else document.documentElement.classList.remove('dark');
@@ -197,7 +201,7 @@ html.force-dark .bg-white {
     );
   }
 
-  function DebugHUD({ effectiveDark, forceTheme }: { effectiveDark: boolean; forceTheme: 'system'|'light'|'dark' }) {
+  function DebugHUD({ effectiveDark, forceTheme }: { effectiveDark: boolean; forceTheme: 'light'|'dark' }) {
     const [htmlClass, setHtmlClass] = useState(document.documentElement.className || '');
     const [prefersDark, setPrefersDark] = useState(false);
     const [rootBg, setRootBg] = useState('');
