@@ -86,13 +86,17 @@ A full-stack task management application built with **Node.js + Express** backen
    npm install
    ```
 
-2. **Create `.env` file** in `backend/` directory:
+3. **Create `.env` file** in `backend/` directory (do NOT commit this file to your repo):
 
    ```properties
-   MONGO_URI=mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/?appName=Cluster0
+   MONGO_URI=mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/<dbname>?retryWrites=true&w=majority
    PORT=8000
    JWT_SECRET=your-secret-key-change-in-production
    ```
+
+   **Deployment note:** When deploying to a hosting provider (Render, Vercel, Heroku, etc.), set `MONGO_URI`, `PORT`, and `JWT_SECRET` in the platform's environment/secret settings. Avoid committing `.env` to the repository and rotate credentials if secrets are accidentally committed. For Atlas, ensure the service's outbound IPs are included in the Atlas Network Access list or configure VPC peering for production-grade security.
+
+   **Health check:** The server exposes a lightweight health endpoint at `GET /api/health` which returns `{ status: 'ok' | 'error', db: 'connected'|'disconnected'|'connecting'|'disconnecting' }`. Use this endpoint in your platform's readiness/health probes to confirm the server and DB are reachable.
 
 3. **Start dev server**:
    ```bash
