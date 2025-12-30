@@ -6,7 +6,7 @@ import EditModal from "../components/EditModal";
 import { API_URL } from '../config';
 import { getToken } from '../auth';
 import { ClipboardList } from 'lucide-react';
-import type { Task, Headers, OverviewData, TrendsData, TrendItem } from '../types';
+import type { Task, Headers, OverviewData, TrendsData } from '../types';
 import {
   LineChart,
   Line,
@@ -129,14 +129,20 @@ export default function Dashboard({ showModal, setShowModal, searchTerm = "" }: 
     { label: 'Overdue', value: overview.overdueTasks, color: 'bg-red-500' }
   ] : [];
 
-  const trendData = trends?.completed?.map((item: TrendItem) => {
-    const overdueItem = trends?.overdue?.find((o: TrendItem) => o.date === item.date);
-    return {
-      date: item.date,
-      completed: item.count,
-      overdue: overdueItem?.count || 0
-    };
-  }) || [];
+  const trendData = (() => {
+    if (!trends) return [];
+    const completed = trends.completed || [];
+    const overdue = trends.overdue || [];
+    const dateSet = new Set<string>();
+    completed.forEach(i => dateSet.add(i.date));
+    overdue.forEach(i => dateSet.add(i.date));
+    const allDates = Array.from(dateSet).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+    return allDates.map(date => ({
+      date,
+      completed: completed.find(i => i.date === date)?.count || 0,
+      overdue: overdue.find(i => i.date === date)?.count || 0
+    }));
+  })();
 
   return (
     <div className="p-4 md:p-6 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 min-h-screen">
@@ -204,7 +210,7 @@ export default function Dashboard({ showModal, setShowModal, searchTerm = "" }: 
                 Status Breakdown
               </h3>
               {statusData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={220}>
                   <PieChart>
                     <Pie
                       data={statusData}
@@ -224,7 +230,7 @@ export default function Dashboard({ showModal, setShowModal, searchTerm = "" }: 
                   </PieChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="h-300 flex items-center justify-center text-gray-500">
+                <div className="h-48 sm:h-56 flex items-center justify-center text-gray-500">
                   No data available
                 </div>
               )}
@@ -236,7 +242,7 @@ export default function Dashboard({ showModal, setShowModal, searchTerm = "" }: 
                 {period === 'weekly' ? 'Weekly' : 'Monthly'} Trends
               </h3>
               {trendData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={220}>
                   <LineChart data={trendData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="date" />
@@ -260,7 +266,7 @@ export default function Dashboard({ showModal, setShowModal, searchTerm = "" }: 
                   </LineChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="h-300 flex items-center justify-center text-gray-500">
+                <div className="h-48 sm:h-56 flex items-center justify-center text-gray-500">
                   No data available
                 </div>
               )}
@@ -272,7 +278,7 @@ export default function Dashboard({ showModal, setShowModal, searchTerm = "" }: 
                 Completed vs Overdue Tasks
               </h3>
               {trendData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={220}>
                   <BarChart data={trendData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="date" />
@@ -284,7 +290,7 @@ export default function Dashboard({ showModal, setShowModal, searchTerm = "" }: 
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="h-300 flex items-center justify-center text-gray-500">
+                <div className="h-48 sm:h-56 flex items-center justify-center text-gray-500">
                   No data available
                 </div>
               )}
