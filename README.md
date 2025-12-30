@@ -395,7 +395,7 @@ To demonstrate the system:
 
 ## 📝 Notes for Internship Submission
 
-- **Deadline**: November 28, 2025
+- **Deadline**: December 30, 2025
 - **Code Location**: GitHub repository (public)
 - **Video**: Demo of full CRUD + auth + search/filter (5-10 min)
 - **README**: This file covers all setup and usage
